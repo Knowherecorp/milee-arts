@@ -25,7 +25,7 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-serif font-medium mb-4">Realism By Khushi</h4>
             <p className="text-muted-foreground mb-4">
-              We curate and craft unique artworks that tell stories and create lasting impressions.
+              We curate and craft unique Indian artworks that tell stories and create lasting impressions.
             </p>
             <div className="flex space-x-4">
               <a 
@@ -149,12 +149,10 @@ const Footer = () => {
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} Realism By Khushi. All rights reserved.
           </p>
-          <div className="flex items-center gap-6">
-            <img src="/payment-visa.svg" alt="Visa" className="h-8 w-auto object-contain opacity-70" />
-            <img src="/payment-mastercard.svg" alt="Mastercard" className="h-8 w-auto object-contain opacity-70" />
-            <img src="/payment-amex.svg" alt="American Express" className="h-8 w-auto object-contain opacity-70" />
-            <img src="/payment-paypal.svg" alt="PayPal" className="h-8 w-auto object-contain opacity-70" />
-          </div>
+          
+          <p className="text-xs text-muted-foreground text-center md:text-right">
+            Handcrafted with pride in India
+          </p>
         </div>
       </div>
     </footer>

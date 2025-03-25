@@ -24,7 +24,7 @@ const Checkout = () => {
     city: '',
     state: '',
     zipCode: '',
-    country: 'US',
+    country: 'IN',
     saveInfo: true,
     shipToDifferentAddress: false,
     paymentMethod: 'credit-card',
@@ -32,6 +32,7 @@ const Checkout = () => {
     cardName: '',
     expiryDate: '',
     cvv: '',
+    upiId: '',
   });
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,7 +64,7 @@ const Checkout = () => {
   
   // Calculate costs
   const shippingCost = 0; // Free shipping
-  const taxRate = 0.07; // 7% tax rate
+  const taxRate = 0.18; // 18% GST
   const taxAmount = subtotal * taxRate;
   const totalCost = subtotal + shippingCost + taxAmount;
   
@@ -73,7 +74,7 @@ const Checkout = () => {
   }
   
   return (
-    <MainLayout>
+    <MainLayout title="Checkout | Realism By Khushi" description="Complete your purchase of handcrafted Indian art at Realism By Khushi.">
       <div className="page-container py-12 md:py-16">
         <h1 className="text-3xl font-serif font-medium mb-8">Checkout</h1>
         
@@ -116,12 +117,13 @@ const Checkout = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone (optional)</Label>
+                  <Label htmlFor="phone">Phone</Label>
                   <Input 
                     id="phone"
                     name="phone"
                     value={formData.phone}
                     onChange={handleInputChange}
+                    required
                   />
                 </div>
               </div>
@@ -153,17 +155,49 @@ const Checkout = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="state">State/Province</Label>
-                    <Input 
-                      id="state"
-                      name="state"
-                      value={formData.state}
-                      onChange={handleInputChange}
-                      required
-                    />
+                    <Label htmlFor="state">State</Label>
+                    <Select 
+                      value={formData.state} 
+                      onValueChange={(value) => handleSelectChange('state', value)}
+                    >
+                      <SelectTrigger id="state">
+                        <SelectValue placeholder="Select State" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="AP">Andhra Pradesh</SelectItem>
+                        <SelectItem value="AR">Arunachal Pradesh</SelectItem>
+                        <SelectItem value="AS">Assam</SelectItem>
+                        <SelectItem value="BR">Bihar</SelectItem>
+                        <SelectItem value="CG">Chhattisgarh</SelectItem>
+                        <SelectItem value="GA">Goa</SelectItem>
+                        <SelectItem value="GJ">Gujarat</SelectItem>
+                        <SelectItem value="HR">Haryana</SelectItem>
+                        <SelectItem value="HP">Himachal Pradesh</SelectItem>
+                        <SelectItem value="JH">Jharkhand</SelectItem>
+                        <SelectItem value="KA">Karnataka</SelectItem>
+                        <SelectItem value="KL">Kerala</SelectItem>
+                        <SelectItem value="MP">Madhya Pradesh</SelectItem>
+                        <SelectItem value="MH">Maharashtra</SelectItem>
+                        <SelectItem value="MN">Manipur</SelectItem>
+                        <SelectItem value="ML">Meghalaya</SelectItem>
+                        <SelectItem value="MZ">Mizoram</SelectItem>
+                        <SelectItem value="NL">Nagaland</SelectItem>
+                        <SelectItem value="OR">Odisha</SelectItem>
+                        <SelectItem value="PB">Punjab</SelectItem>
+                        <SelectItem value="RJ">Rajasthan</SelectItem>
+                        <SelectItem value="SK">Sikkim</SelectItem>
+                        <SelectItem value="TN">Tamil Nadu</SelectItem>
+                        <SelectItem value="TG">Telangana</SelectItem>
+                        <SelectItem value="TR">Tripura</SelectItem>
+                        <SelectItem value="UK">Uttarakhand</SelectItem>
+                        <SelectItem value="UP">Uttar Pradesh</SelectItem>
+                        <SelectItem value="WB">West Bengal</SelectItem>
+                        <SelectItem value="DL">Delhi</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="zipCode">ZIP/Postal Code</Label>
+                    <Label htmlFor="zipCode">PIN Code</Label>
                     <Input 
                       id="zipCode"
                       name="zipCode"
@@ -182,10 +216,7 @@ const Checkout = () => {
                         <SelectValue placeholder="Select Country" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="US">United States</SelectItem>
-                        <SelectItem value="CA">Canada</SelectItem>
-                        <SelectItem value="UK">United Kingdom</SelectItem>
-                        <SelectItem value="AU">Australia</SelectItem>
+                        <SelectItem value="IN">India</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -211,22 +242,30 @@ const Checkout = () => {
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label>Payment Method</Label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                     <Button
                       type="button"
                       variant={formData.paymentMethod === 'credit-card' ? 'default' : 'outline'}
                       className="justify-start"
                       onClick={() => handleSelectChange('paymentMethod', 'credit-card')}
                     >
-                      Credit Card
+                      Credit/Debit Card
                     </Button>
                     <Button
                       type="button"
-                      variant={formData.paymentMethod === 'paypal' ? 'default' : 'outline'}
+                      variant={formData.paymentMethod === 'upi' ? 'default' : 'outline'}
                       className="justify-start"
-                      onClick={() => handleSelectChange('paymentMethod', 'paypal')}
+                      onClick={() => handleSelectChange('paymentMethod', 'upi')}
                     >
-                      PayPal
+                      UPI
+                    </Button>
+                    <Button
+                      type="button"
+                      variant={formData.paymentMethod === 'cod' ? 'default' : 'outline'}
+                      className="justify-start"
+                      onClick={() => handleSelectChange('paymentMethod', 'cod')}
+                    >
+                      Cash on Delivery
                     </Button>
                   </div>
                 </div>
@@ -281,10 +320,29 @@ const Checkout = () => {
                   </div>
                 )}
                 
-                {formData.paymentMethod === 'paypal' && (
+                {formData.paymentMethod === 'upi' && (
+                  <div className="space-y-4 pt-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="upiId">UPI ID</Label>
+                      <Input 
+                        id="upiId"
+                        name="upiId"
+                        placeholder="name@upi"
+                        value={formData.upiId}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      You will be redirected to your UPI app to complete the payment.
+                    </p>
+                  </div>
+                )}
+                
+                {formData.paymentMethod === 'cod' && (
                   <div className="bg-secondary/20 p-4 rounded-md">
                     <p className="text-sm">
-                      You will be redirected to PayPal to complete your payment securely.
+                      Pay in cash when your order is delivered. Additional ₹50 fee applies for Cash on Delivery.
                     </p>
                   </div>
                 )}
@@ -312,7 +370,7 @@ const Checkout = () => {
                         <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
                       </div>
                     </div>
-                    <span>${(item.product.price * item.quantity).toFixed(2)}</span>
+                    <span>₹{(item.product.price * item.quantity).toFixed(2)}</span>
                   </div>
                 ))}
               </div>
@@ -323,22 +381,28 @@ const Checkout = () => {
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>₹{subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Shipping</span>
-                  <span>{shippingCost > 0 ? `$${shippingCost.toFixed(2)}` : 'Free'}</span>
+                  <span>{shippingCost > 0 ? `₹${shippingCost.toFixed(2)}` : 'Free'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Tax (7%)</span>
-                  <span>${taxAmount.toFixed(2)}</span>
+                  <span className="text-muted-foreground">GST (18%)</span>
+                  <span>₹{taxAmount.toFixed(2)}</span>
                 </div>
+                {formData.paymentMethod === 'cod' && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">COD Fee</span>
+                    <span>₹50.00</span>
+                  </div>
+                )}
               </div>
               
               <div className="border-t pt-4 mb-6">
                 <div className="flex justify-between font-medium text-lg">
                   <span>Total</span>
-                  <span>${totalCost.toFixed(2)}</span>
+                  <span>₹{(formData.paymentMethod === 'cod' ? totalCost + 50 : totalCost).toFixed(2)}</span>
                 </div>
               </div>
               
