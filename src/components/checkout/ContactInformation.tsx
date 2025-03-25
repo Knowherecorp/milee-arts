@@ -54,6 +54,10 @@ const ContactInformation = ({ formData, handleInputChange }: ContactInformationP
           <Input 
             id="phone"
             name="phone"
+            type="tel"
+            placeholder="10-digit mobile number"
+            pattern="[6-9]{1}[0-9]{9}"
+            title="Please enter a valid Indian mobile number (10 digits starting with 6, 7, 8 or 9)"
             value={formData.phone}
             onChange={handleInputChange}
             required

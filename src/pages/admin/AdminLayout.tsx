@@ -64,6 +64,7 @@ const AdminLayout = () => {
     <div className="min-h-screen bg-secondary/10">
       <Helmet>
         <title>Admin Dashboard | Realism By Khushi</title>
+        <meta name="robots" content="noindex, nofollow" />
       </Helmet>
       
       {/* Mobile header */}

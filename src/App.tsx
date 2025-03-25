@@ -64,7 +64,7 @@ const App = () => (
               <Route path="/search" element={<Search />} />
               <Route path="/new-arrivals" element={<NewArrivals />} />
               
-              {/* Admin Routes */}
+              {/* Admin Routes - not indexable by search engines */}
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<AdminDashboard />} />
