@@ -1,0 +1,41 @@
+
+/* Admin area styles */
+.admin-container {
+  @apply max-w-full;
+}
+
+.admin-header {
+  @apply flex justify-between items-center mb-6;
+}
+
+.admin-title {
+  @apply text-2xl font-bold;
+}
+
+.admin-card {
+  @apply bg-card p-6 rounded-lg shadow-sm border border-border;
+}
+
+.admin-table {
+  @apply w-full;
+}
+
+.admin-table-header {
+  @apply bg-muted text-muted-foreground text-left text-sm font-medium p-3;
+}
+
+.admin-table-cell {
+  @apply p-3 text-sm border-b border-border;
+}
+
+.admin-form {
+  @apply space-y-4;
+}
+
+.admin-form-section {
+  @apply space-y-2;
+}
+
+.admin-button-group {
+  @apply flex flex-wrap gap-2 mt-6;
+}
