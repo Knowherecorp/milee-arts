@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ShoppingCart, Users, Package, DollarSign, Tags, ImageIcon } from 'lucide-react';
@@ -14,10 +15,7 @@ const AdminDashboard = () => {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$0.00</div>
-            <p className="text-xs text-muted-foreground">
-              Connect to your data source
-            </p>
+            <div className="text-2xl font-bold">₹0.00</div>
           </CardContent>
         </Card>
         <Card>
@@ -29,9 +27,6 @@ const AdminDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">0</div>
-            <p className="text-xs text-muted-foreground">
-              Connect to your data source
-            </p>
           </CardContent>
         </Card>
         <Card>
@@ -43,9 +38,6 @@ const AdminDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">0</div>
-            <p className="text-xs text-muted-foreground">
-              Connect to your data source
-            </p>
           </CardContent>
         </Card>
         <Card>
@@ -57,9 +49,6 @@ const AdminDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">0</div>
-            <p className="text-xs text-muted-foreground">
-              Connect to your data source
-            </p>
           </CardContent>
         </Card>
       </div>
@@ -70,9 +59,9 @@ const AdminDashboard = () => {
             <CardTitle>Recent Orders</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-center py-8 text-muted-foreground">
+            <div className="text-center py-8 text-muted-foreground">
               No orders yet. They will appear here when customers place them.
-            </p>
+            </div>
           </CardContent>
         </Card>
         
@@ -81,9 +70,9 @@ const AdminDashboard = () => {
             <CardTitle>Popular Products</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-center py-8 text-muted-foreground">
-              No product data available yet. Add products and track their performance.
-            </p>
+            <div className="text-center py-8 text-muted-foreground">
+              No product data available yet.
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -114,7 +103,7 @@ const AdminDashboard = () => {
                 <div>
                   <h3 className="font-medium">Create Categories</h3>
                   <p className="text-sm text-muted-foreground">
-                    Organize your products by creating categories to improve navigation.
+                    Organize your products by creating categories.
                   </p>
                 </div>
               </div>
@@ -126,7 +115,7 @@ const AdminDashboard = () => {
                 <div>
                   <h3 className="font-medium">Set Up Banners</h3>
                   <p className="text-sm text-muted-foreground">
-                    Create promotional banners to highlight special offers and new products.
+                    Create promotional banners to highlight special offers.
                   </p>
                 </div>
               </div>

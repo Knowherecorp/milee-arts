@@ -7,28 +7,28 @@ const AboutSection = () => {
   return (
     <section className="py-16 md:py-24">
       <div className="page-container">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
           <div className="order-2 lg:order-1">
             <h2 className="text-3xl md:text-4xl font-serif font-medium mb-6">The Artist Behind Realism By Khushi</h2>
             <p className="text-muted-foreground mb-4">
-              Each artwork at Realism By Khushi is carefully crafted by artist Khushi Sharma, whose unique vision and attention to detail brings beauty into everyday spaces.
+              Add your artist biography here. Describe your artistic journey, inspiration, and vision.
             </p>
             <p className="text-muted-foreground mb-6">
-              With a passion for exploring various artistic mediums, from traditional oil painting to contemporary resin techniques, Khushi creates pieces that evoke emotion and transform environments.
+              This is where you can share your artistic philosophy and what makes your art unique and special.
             </p>
             <Button asChild>
               <Link to="/about">
-                Learn More About Khushi
+                Learn More
               </Link>
             </Button>
           </div>
           <div className="order-1 lg:order-2">
             <div className="relative">
-              <img 
-                src="https://images.unsplash.com/photo-1560421683-6856ea585c78?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGFydGlzdCUyMHBhaW50aW5nfGVufDB8fDB8fHww" 
-                alt="Artist at work" 
-                className="rounded-lg shadow-md object-cover w-full aspect-[3/4]"
-              />
+              <div className="aspect-[3/4] bg-muted rounded-lg flex items-center justify-center">
+                <p className="text-muted-foreground text-center p-4">
+                  Artist image will be displayed here
+                </p>
+              </div>
               <div className="absolute -bottom-6 -left-6 w-1/2 h-1/2 border-2 border-primary rounded-lg -z-10"></div>
               <div className="absolute -top-6 -right-6 w-1/2 h-1/2 border-2 border-primary rounded-lg -z-10"></div>
             </div>

@@ -1,31 +1,31 @@
 
 /* Admin area styles */
 .admin-container {
-  @apply max-w-full;
+  @apply max-w-full px-4;
 }
 
 .admin-header {
-  @apply flex justify-between items-center mb-6;
+  @apply flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4;
 }
 
 .admin-title {
-  @apply text-2xl font-bold;
+  @apply text-xl sm:text-2xl font-bold;
 }
 
 .admin-card {
-  @apply bg-card p-6 rounded-lg shadow-sm border border-border;
+  @apply bg-card p-4 sm:p-6 rounded-lg shadow-sm border border-border;
 }
 
 .admin-table {
-  @apply w-full;
+  @apply w-full overflow-x-auto;
 }
 
 .admin-table-header {
-  @apply bg-muted text-muted-foreground text-left text-sm font-medium p-3;
+  @apply bg-muted text-muted-foreground text-left text-sm font-medium p-2 sm:p-3;
 }
 
 .admin-table-cell {
-  @apply p-3 text-sm border-b border-border;
+  @apply p-2 sm:p-3 text-sm border-b border-border;
 }
 
 .admin-form {
@@ -37,5 +37,16 @@
 }
 
 .admin-button-group {
-  @apply flex flex-wrap gap-2 mt-6;
+  @apply flex flex-wrap gap-2 mt-4 sm:mt-6;
+}
+
+/* Responsive admin layout */
+@media (max-width: 640px) {
+  .admin-container {
+    @apply px-2;
+  }
+  
+  .admin-table {
+    @apply text-xs;
+  }
 }
