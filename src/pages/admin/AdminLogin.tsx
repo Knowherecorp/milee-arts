@@ -1,142 +1,111 @@
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
-import { Input } from '@/components/ui/input';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Lock, User, LogIn } from 'lucide-react';
 import { toast } from 'sonner';
-import { Eye, EyeOff, Lock, User } from 'lucide-react';
+import { loginAdmin, isAdminLoggedIn } from '@/services/auth';
 
 const AdminLogin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [isDirectAccess, setIsDirectAccess] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
 
-  // Check if admin is already logged in
   useEffect(() => {
-    const isAdmin = localStorage.getItem('adminAuth');
-    if (isAdmin) {
+    // If already logged in, redirect to admin dashboard
+    if (isAdminLoggedIn()) {
       navigate('/admin');
     }
   }, [navigate]);
 
-  // Check if the user is accessing the admin login directly from URL
-  useEffect(() => {
-    const referrer = document.referrer;
-    // If no referrer or referrer is from an external site (not our domain)
-    if (!referrer || !referrer.includes(window.location.hostname)) {
-      setIsDirectAccess(true);
-    }
-  }, []);
-
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!username || !password) {
+      toast.error('Please enter both username and password');
+      return;
+    }
+    
     setIsLoading(true);
-
-    // For demo purposes, hardcoded credentials
-    if (username === 'admin' && password === 'admin123') {
-      // Set admin auth in localStorage (in a real app, use JWT tokens)
-      localStorage.setItem('adminAuth', 'true');
+    
+    try {
+      const admin = await loginAdmin(username, password);
       
-      setTimeout(() => {
-        setIsLoading(false);
-        toast.success('Logged in successfully');
+      if (admin) {
+        toast.success('Login successful');
         navigate('/admin');
-      }, 1000);
-    } else {
-      setTimeout(() => {
-        setIsLoading(false);
-        toast.error('Invalid credentials');
-      }, 1000);
+      } else {
+        toast.error('Invalid username or password');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      toast.error('An error occurred during login');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-secondary/30 px-4">
-      <Helmet>
-        <title>Admin Login | Realism By Khushi</title>
-        <meta name="robots" content="noindex, nofollow" />
-      </Helmet>
-      
+    <div className="flex items-center justify-center min-h-screen bg-background">
       <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl font-serif">Admin Login</CardTitle>
-          <CardDescription>
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl font-serif text-center">Admin Login</CardTitle>
+          <CardDescription className="text-center">
             Enter your credentials to access the admin dashboard
           </CardDescription>
-          {isDirectAccess && (
-            <p className="text-sm text-amber-600 mt-2">
-              Note: Admin credentials for demo purposes: 
-              <br />Username: admin, Password: admin123
-            </p>
-          )}
         </CardHeader>
-        
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleLogin}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="username">Username</Label>
               <div className="relative">
-                <div className="absolute left-2.5 top-2.5 text-muted-foreground">
-                  <User size={18} />
-                </div>
-                <Input 
-                  id="username" 
-                  type="text" 
-                  className="pl-9"
+                <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="username"
+                  placeholder="admin"
+                  className="pl-10"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  required
+                  disabled={isLoading}
                 />
               </div>
             </div>
-            
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-              </div>
+              <Label htmlFor="password">Password</Label>
               <div className="relative">
-                <div className="absolute left-2.5 top-2.5 text-muted-foreground">
-                  <Lock size={18} />
-                </div>
-                <Input 
-                  id="password" 
-                  type={showPassword ? "text" : "password"}
-                  className="pl-9"
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  className="pl-10"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  required
+                  disabled={isLoading}
                 />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="absolute right-0 top-0 h-full px-3"
-                  onClick={toggleShowPassword}
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </Button>
               </div>
             </div>
           </CardContent>
-          
           <CardFooter>
-            <Button 
-              type="submit" 
-              className="w-full"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Signing in...' : 'Sign In'}
+            <Button className="w-full" type="submit" disabled={isLoading}>
+              {isLoading ? (
+                <span className="flex items-center">
+                  <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Logging in...
+                </span>
+              ) : (
+                <span className="flex items-center">
+                  <LogIn className="mr-2 h-4 w-4" />
+                  Login
+                </span>
+              )}
             </Button>
           </CardFooter>
         </form>

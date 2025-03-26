@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Users, Search, Edit, Trash2, UserPlus, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,98 +21,72 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-
-// Mock customer data
-const mockCustomers = [
-  { 
-    id: '1', 
-    name: 'Ananya Sharma', 
-    email: 'ananya.sharma@gmail.com', 
-    phone: '+91 98765 43210', 
-    location: 'Mumbai, Maharashtra', 
-    totalOrders: 8,
-    totalSpent: '₹24,850',
-    lastOrder: '12 Jun 2023'
-  },
-  { 
-    id: '2', 
-    name: 'Rajesh Kumar', 
-    email: 'rajesh.kumar@outlook.com', 
-    phone: '+91 87654 32109', 
-    location: 'Bangalore, Karnataka', 
-    totalOrders: 5,
-    totalSpent: '₹18,200',
-    lastOrder: '23 Jul 2023'
-  },
-  { 
-    id: '3', 
-    name: 'Priya Patel', 
-    email: 'priya.patel@yahoo.com', 
-    phone: '+91 76543 21098', 
-    location: 'Ahmedabad, Gujarat', 
-    totalOrders: 12,
-    totalSpent: '₹36,750',
-    lastOrder: '05 Aug 2023'
-  },
-  { 
-    id: '4', 
-    name: 'Vikram Singh', 
-    email: 'vikram.singh@hotmail.com', 
-    phone: '+91 65432 10987', 
-    location: 'New Delhi, Delhi', 
-    totalOrders: 3,
-    totalSpent: '₹9,300',
-    lastOrder: '18 Aug 2023'
-  },
-  { 
-    id: '5', 
-    name: 'Meera Reddy', 
-    email: 'meera.reddy@gmail.com', 
-    phone: '+91 54321 09876', 
-    location: 'Chennai, Tamil Nadu', 
-    totalOrders: 7,
-    totalSpent: '₹21,500',
-    lastOrder: '02 Sep 2023'
-  }
-];
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getCustomers, deleteCustomer } from '@/services/api';
+import { Customer } from '@/types/supabase';
 
 const AdminCustomers = () => {
-  const [customers, setCustomers] = useState(mockCustomers);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const queryClient = useQueryClient();
+
+  // Fetch customers with react-query
+  const { data: customers = [], isLoading, error } = useQuery({
+    queryKey: ['customers'],
+    queryFn: getCustomers
+  });
+
+  // Delete customer mutation
+  const deleteMutation = useMutation({
+    mutationFn: deleteCustomer,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['customers'] });
+      toast.success(`Customer ${selectedCustomer?.name} has been deleted`);
+      setIsDeleteModalOpen(false);
+      setSelectedCustomer(null);
+    },
+    onError: (error) => {
+      toast.error(`Error deleting customer: ${error.message}`);
+    }
+  });
 
   // Filter customers based on search term
   const filteredCustomers = customers.filter(customer => 
     customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    customer.phone.includes(searchTerm)
+    (customer.phone && customer.phone.includes(searchTerm))
   );
 
-  const handleViewCustomer = (customer) => {
+  const handleViewCustomer = (customer: Customer) => {
     setSelectedCustomer(customer);
     setIsViewModalOpen(true);
   };
 
-  const handleEditCustomer = (customer) => {
+  const handleEditCustomer = (customer: Customer) => {
     // In a real app, this would navigate to an edit form
     toast.info(`Edit customer: ${customer.name}`);
   };
 
-  const handleDeleteClick = (customer) => {
+  const handleDeleteClick = (customer: Customer) => {
     setSelectedCustomer(customer);
     setIsDeleteModalOpen(true);
   };
 
   const confirmDelete = () => {
     if (selectedCustomer) {
-      setCustomers(customers.filter(c => c.id !== selectedCustomer.id));
-      toast.success(`Customer ${selectedCustomer.name} has been deleted`);
-      setIsDeleteModalOpen(false);
-      setSelectedCustomer(null);
+      deleteMutation.mutate(selectedCustomer.id);
     }
   };
+
+  if (isLoading) {
+    return <div className="flex justify-center p-8">Loading customers...</div>;
+  }
+
+  if (error) {
+    return <div className="p-8 text-red-500">Error loading customers: {error.message}</div>;
+  }
 
   return (
     <div className="space-y-6">
@@ -145,7 +119,6 @@ const AdminCustomers = () => {
               <TableHead>Email</TableHead>
               <TableHead className="hidden md:table-cell">Phone</TableHead>
               <TableHead className="hidden md:table-cell">Location</TableHead>
-              <TableHead className="hidden md:table-cell text-right">Total Orders</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -155,9 +128,8 @@ const AdminCustomers = () => {
                 <TableRow key={customer.id}>
                   <TableCell className="font-medium">{customer.name}</TableCell>
                   <TableCell>{customer.email}</TableCell>
-                  <TableCell className="hidden md:table-cell">{customer.phone}</TableCell>
-                  <TableCell className="hidden md:table-cell">{customer.location}</TableCell>
-                  <TableCell className="hidden md:table-cell text-right">{customer.totalOrders}</TableCell>
+                  <TableCell className="hidden md:table-cell">{customer.phone || '-'}</TableCell>
+                  <TableCell className="hidden md:table-cell">{customer.location || '-'}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <Button variant="ghost" size="icon" onClick={() => handleViewCustomer(customer)}>
@@ -175,7 +147,7 @@ const AdminCustomers = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={6} className="h-24 text-center">
+                <TableCell colSpan={5} className="h-24 text-center">
                   No customers found.
                 </TableCell>
               </TableRow>
@@ -205,23 +177,11 @@ const AdminCustomers = () => {
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label className="text-right font-medium">Phone</Label>
-                <div className="col-span-3">{selectedCustomer.phone}</div>
+                <div className="col-span-3">{selectedCustomer.phone || '-'}</div>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label className="text-right font-medium">Location</Label>
-                <div className="col-span-3">{selectedCustomer.location}</div>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label className="text-right font-medium">Total Orders</Label>
-                <div className="col-span-3">{selectedCustomer.totalOrders}</div>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label className="text-right font-medium">Total Spent</Label>
-                <div className="col-span-3">{selectedCustomer.totalSpent}</div>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label className="text-right font-medium">Last Order</Label>
-                <div className="col-span-3">{selectedCustomer.lastOrder}</div>
+                <div className="col-span-3">{selectedCustomer.location || '-'}</div>
               </div>
             </div>
           )}
@@ -246,8 +206,13 @@ const AdminCustomers = () => {
             <Button type="button" variant="outline" onClick={() => setIsDeleteModalOpen(false)}>
               Cancel
             </Button>
-            <Button type="button" variant="destructive" onClick={confirmDelete}>
-              Delete
+            <Button 
+              type="button" 
+              variant="destructive" 
+              onClick={confirmDelete}
+              disabled={deleteMutation.isPending}
+            >
+              {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
             </Button>
           </DialogFooter>
         </DialogContent>
