@@ -44,7 +44,7 @@ const Testimonials = () => {
         ) : (
           <div className="text-center py-8 border rounded-lg">
             <p className="text-muted-foreground">
-              Testimonials will appear here once received.
+              Add testimonials to showcase customer feedback.
             </p>
           </div>
         )}

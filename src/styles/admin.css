@@ -1,11 +1,11 @@
 
 /* Admin area styles */
 .admin-container {
-  @apply max-w-full px-2 sm:px-4;
+  @apply max-w-full px-4 sm:px-6 py-4 sm:py-6;
 }
 
 .admin-header {
-  @apply flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-2 sm:gap-4;
+  @apply flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-3 sm:gap-4;
 }
 
 .admin-title {
@@ -13,7 +13,7 @@
 }
 
 .admin-card {
-  @apply bg-card p-3 sm:p-4 md:p-6 rounded-lg shadow-sm border border-border;
+  @apply bg-card p-4 sm:p-6 rounded-lg shadow-sm border border-border;
 }
 
 .admin-table {
@@ -21,23 +21,23 @@
 }
 
 .admin-table-header {
-  @apply bg-muted text-muted-foreground text-left text-sm font-medium p-2 sm:p-3;
+  @apply bg-muted text-muted-foreground text-left text-sm font-medium p-3 sm:p-4;
 }
 
 .admin-table-cell {
-  @apply p-2 sm:p-3 text-sm border-b border-border;
+  @apply p-3 sm:p-4 text-sm border-b border-border;
 }
 
 .admin-form {
-  @apply space-y-4;
+  @apply space-y-4 sm:space-y-6;
 }
 
 .admin-form-section {
-  @apply space-y-2;
+  @apply space-y-3;
 }
 
 .admin-button-group {
-  @apply flex flex-wrap gap-2 mt-4 sm:mt-6;
+  @apply flex flex-wrap gap-3 mt-6 sm:mt-8;
 }
 
 /* Responsive admin layout */
@@ -57,7 +57,7 @@
 
 /* Image upload areas */
 .image-upload-area {
-  @apply border-2 border-dashed border-border rounded-md p-4 flex flex-col items-center justify-center cursor-pointer bg-muted/20 hover:bg-muted/30 transition-colors;
+  @apply border-2 border-dashed border-border rounded-md p-4 flex flex-col items-center justify-center cursor-pointer bg-muted/20 hover:bg-muted/30 transition-colors min-h-[160px];
 }
 
 .image-upload-area-label {
@@ -87,4 +87,30 @@
 
 .no-content-description {
   @apply text-muted-foreground mb-4 max-w-md mx-auto text-sm sm:text-base;
+}
+
+/* Empty state styling */
+.empty-state {
+  @apply flex flex-col items-center justify-center text-center p-8;
+}
+
+.empty-state-icon {
+  @apply h-12 w-12 text-muted-foreground mb-4;
+}
+
+.empty-state-text {
+  @apply text-lg font-medium mb-2;
+}
+
+.empty-state-description {
+  @apply text-muted-foreground mb-6 max-w-md mx-auto;
+}
+
+/* File upload input styled as a button */
+.file-input-button {
+  @apply relative inline-flex items-center justify-center;
+}
+
+.file-input-button input[type="file"] {
+  @apply absolute inset-0 w-full h-full opacity-0 cursor-pointer;
 }

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Users, Search, Edit, Trash2, UserPlus, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -148,7 +148,11 @@ const AdminCustomers = () => {
             ) : (
               <TableRow>
                 <TableCell colSpan={5} className="h-24 text-center">
-                  No customers found.
+                  <div className="empty-state">
+                    <Users className="empty-state-icon" />
+                    <p className="empty-state-text">No customers found</p>
+                    <p className="empty-state-description">Customer data will appear here once added</p>
+                  </div>
                 </TableCell>
               </TableRow>
             )}
