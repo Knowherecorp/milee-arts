@@ -1,11 +1,11 @@
 
 /* Admin area styles */
 .admin-container {
-  @apply max-w-full px-4;
+  @apply max-w-full px-2 sm:px-4;
 }
 
 .admin-header {
-  @apply flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4;
+  @apply flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-2 sm:gap-4;
 }
 
 .admin-title {
@@ -13,7 +13,7 @@
 }
 
 .admin-card {
-  @apply bg-card p-4 sm:p-6 rounded-lg shadow-sm border border-border;
+  @apply bg-card p-3 sm:p-4 md:p-6 rounded-lg shadow-sm border border-border;
 }
 
 .admin-table {
@@ -42,11 +42,49 @@
 
 /* Responsive admin layout */
 @media (max-width: 640px) {
-  .admin-container {
-    @apply px-2;
-  }
-  
   .admin-table {
     @apply text-xs;
   }
+  
+  .admin-card {
+    @apply p-3;
+  }
+  
+  .admin-button-group {
+    @apply w-full justify-center;
+  }
+}
+
+/* Image upload areas */
+.image-upload-area {
+  @apply border-2 border-dashed border-border rounded-md p-4 flex flex-col items-center justify-center cursor-pointer bg-muted/20 hover:bg-muted/30 transition-colors;
+}
+
+.image-upload-area-label {
+  @apply flex flex-col items-center;
+}
+
+.image-preview {
+  @apply relative w-full aspect-video overflow-hidden bg-muted rounded-md mb-4;
+}
+
+.image-preview img {
+  @apply w-full h-full object-cover;
+}
+
+/* No content placeholders */
+.no-content-placeholder {
+  @apply text-center py-8 sm:py-12 border rounded-lg;
+}
+
+.no-content-icon {
+  @apply mx-auto h-10 w-10 sm:h-12 sm:w-12 text-muted-foreground mb-4;
+}
+
+.no-content-title {
+  @apply text-lg font-medium mb-2;
+}
+
+.no-content-description {
+  @apply text-muted-foreground mb-4 max-w-md mx-auto text-sm sm:text-base;
 }

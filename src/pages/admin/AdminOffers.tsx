@@ -22,54 +22,29 @@ import {
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 
-// Mock offer data
-const mockOffers = [
-  { 
-    id: '1', 
-    code: 'DIWALI25', 
-    description: 'Diwali Special Offer - 25% off on all products',
-    discount: 25, 
-    discountType: 'percentage', 
-    startDate: '2023-10-15', 
-    endDate: '2023-11-15',
-    minPurchase: 2000,
-    active: true
-  },
-  { 
-    id: '2', 
-    code: 'WELCOME500', 
-    description: 'Welcome Offer - ₹500 off on your first purchase',
-    discount: 500, 
-    discountType: 'fixed', 
-    startDate: '2023-01-01', 
-    endDate: '2023-12-31',
-    minPurchase: 1500,
-    active: true
-  },
-  { 
-    id: '3', 
-    code: 'SUMMER20', 
-    description: 'Summer Sale - 20% off on selected items',
-    discount: 20, 
-    discountType: 'percentage', 
-    startDate: '2023-05-01', 
-    endDate: '2023-07-31',
-    minPurchase: 1000,
-    active: false
-  }
-];
+interface Offer {
+  id: string;
+  code: string;
+  description: string;
+  discount: number;
+  discountType: 'percentage' | 'fixed';
+  startDate: string;
+  endDate: string;
+  minPurchase: number;
+  active: boolean;
+}
 
 const AdminOffers = () => {
-  const [offers, setOffers] = useState(mockOffers);
+  const [offers, setOffers] = useState<Offer[]>([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedOffer, setSelectedOffer] = useState(null);
+  const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
   const [newOffer, setNewOffer] = useState({
     code: '',
     description: '',
     discount: 0,
-    discountType: 'percentage',
+    discountType: 'percentage' as 'percentage' | 'fixed',
     startDate: '',
     endDate: '',
     minPurchase: 0,
@@ -96,25 +71,18 @@ const AdminOffers = () => {
     
     setOffers([...offers, offer]);
     setIsAddModalOpen(false);
-    setNewOffer({
-      code: '',
-      description: '',
-      discount: 0,
-      discountType: 'percentage',
-      startDate: '',
-      endDate: '',
-      minPurchase: 0,
-      active: true
-    });
+    resetForm();
     toast.success('Offer added successfully');
   };
 
-  const handleEditClick = (offer) => {
+  const handleEditClick = (offer: Offer) => {
     setSelectedOffer(offer);
     setIsEditModalOpen(true);
   };
 
   const handleUpdateOffer = () => {
+    if (!selectedOffer) return;
+    
     if (!selectedOffer.code || !selectedOffer.description || !selectedOffer.discount || !selectedOffer.startDate || !selectedOffer.endDate) {
       toast.error('Please fill all required fields');
       return;
@@ -125,36 +93,55 @@ const AdminOffers = () => {
     ));
     
     setIsEditModalOpen(false);
+    resetForm();
     toast.success('Offer updated successfully');
   };
 
-  const handleDeleteClick = (offer) => {
+  const handleDeleteClick = (offer: Offer) => {
     setSelectedOffer(offer);
     setIsDeleteModalOpen(true);
   };
 
   const confirmDelete = () => {
+    if (!selectedOffer) return;
     setOffers(offers.filter(offer => offer.id !== selectedOffer.id));
     setIsDeleteModalOpen(false);
+    resetForm();
     toast.success('Offer deleted successfully');
   };
 
-  const toggleOfferStatus = (id) => {
+  const toggleOfferStatus = (id: string) => {
     setOffers(offers.map(offer => 
       offer.id === id ? {...offer, active: !offer.active} : offer
     ));
     
     const offer = offers.find(o => o.id === id);
-    toast.success(`Offer ${offer.code} ${!offer.active ? 'activated' : 'deactivated'}`);
+    if (offer) {
+      toast.success(`Offer ${offer.code} ${!offer.active ? 'activated' : 'deactivated'}`);
+    }
   };
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = { 
       year: 'numeric', 
       month: 'short', 
       day: 'numeric' 
     };
     return new Date(dateString).toLocaleDateString('en-IN', options);
+  };
+
+  const resetForm = () => {
+    setNewOffer({
+      code: '',
+      description: '',
+      discount: 0,
+      discountType: 'percentage',
+      startDate: '',
+      endDate: '',
+      minPurchase: 0,
+      active: true
+    });
+    setSelectedOffer(null);
   };
 
   return (
@@ -180,67 +167,81 @@ const AdminOffers = () => {
         </Button>
       </div>
 
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Code</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead className="hidden md:table-cell">Discount</TableHead>
-              <TableHead className="hidden md:table-cell">Validity</TableHead>
-              <TableHead className="hidden md:table-cell">Min. Purchase</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredOffers.length > 0 ? (
-              filteredOffers.map((offer) => (
-                <TableRow key={offer.id}>
-                  <TableCell className="font-medium">{offer.code}</TableCell>
-                  <TableCell className="max-w-[200px] truncate">{offer.description}</TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    {offer.discountType === 'percentage' ? `${offer.discount}%` : `₹${offer.discount}`}
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    <span className="flex items-center text-sm">
-                      <Calendar size={14} className="mr-1" />
-                      {formatDate(offer.startDate)} - {formatDate(offer.endDate)}
-                    </span>
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">₹{offer.minPurchase}</TableCell>
-                  <TableCell>
-                    <Button 
-                      variant={offer.active ? "outline" : "ghost"} 
-                      size="sm"
-                      className={`${offer.active ? 'bg-green-50 text-green-700 hover:bg-green-100 hover:text-green-800' : 'text-muted-foreground'}`}
-                      onClick={() => toggleOfferStatus(offer.id)}
-                    >
-                      {offer.active ? 'Active' : 'Inactive'}
-                    </Button>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button variant="ghost" size="icon" onClick={() => handleEditClick(offer)}>
-                        <Edit size={16} />
+      {offers.length > 0 ? (
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Code</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead className="hidden md:table-cell">Discount</TableHead>
+                <TableHead className="hidden md:table-cell">Validity</TableHead>
+                <TableHead className="hidden md:table-cell">Min. Purchase</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredOffers.length > 0 ? (
+                filteredOffers.map((offer) => (
+                  <TableRow key={offer.id}>
+                    <TableCell className="font-medium">{offer.code}</TableCell>
+                    <TableCell className="max-w-[200px] truncate">{offer.description}</TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      {offer.discountType === 'percentage' ? `${offer.discount}%` : `₹${offer.discount}`}
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      <span className="flex items-center text-sm">
+                        <Calendar size={14} className="mr-1" />
+                        {formatDate(offer.startDate)} - {formatDate(offer.endDate)}
+                      </span>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">₹{offer.minPurchase}</TableCell>
+                    <TableCell>
+                      <Button 
+                        variant={offer.active ? "outline" : "ghost"} 
+                        size="sm"
+                        className={`${offer.active ? 'bg-green-50 text-green-700 hover:bg-green-100 hover:text-green-800' : 'text-muted-foreground'}`}
+                        onClick={() => toggleOfferStatus(offer.id)}
+                      >
+                        {offer.active ? 'Active' : 'Inactive'}
                       </Button>
-                      <Button variant="ghost" size="icon" onClick={() => handleDeleteClick(offer)}>
-                        <Trash2 size={16} />
-                      </Button>
-                    </div>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-2">
+                        <Button variant="ghost" size="icon" onClick={() => handleEditClick(offer)}>
+                          <Edit size={16} />
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => handleDeleteClick(offer)}>
+                          <Trash2 size={16} />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={7} className="h-24 text-center">
+                    No offers found matching your search.
                   </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={7} className="h-24 text-center">
-                  No offers found.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      ) : (
+        <div className="text-center py-12 border rounded-lg">
+          <Percent className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+          <h3 className="text-lg font-medium mb-2">No Offers Yet</h3>
+          <p className="text-muted-foreground mb-4 max-w-md mx-auto">
+            Create promotional offers and discount codes to boost your sales and attract customers.
+          </p>
+          <Button onClick={() => setIsAddModalOpen(true)}>
+            <Plus size={16} className="mr-2" />
+            Add Your First Offer
+          </Button>
+        </div>
+      )}
 
       {/* Add Offer Modal */}
       <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
@@ -268,14 +269,14 @@ const AdminOffers = () => {
                   <Input
                     id="discount"
                     type="number"
-                    value={newOffer.discount}
+                    value={newOffer.discount || ''}
                     onChange={(e) => setNewOffer({...newOffer, discount: parseFloat(e.target.value)})}
                     placeholder="25"
                   />
                   <select
                     className="ml-2 border rounded-md px-2"
                     value={newOffer.discountType}
-                    onChange={(e) => setNewOffer({...newOffer, discountType: e.target.value})}
+                    onChange={(e) => setNewOffer({...newOffer, discountType: e.target.value as 'percentage' | 'fixed'})}
                   >
                     <option value="percentage">%</option>
                     <option value="fixed">₹</option>
@@ -317,7 +318,7 @@ const AdminOffers = () => {
               <Input
                 id="minPurchase"
                 type="number"
-                value={newOffer.minPurchase}
+                value={newOffer.minPurchase || ''}
                 onChange={(e) => setNewOffer({...newOffer, minPurchase: parseFloat(e.target.value)})}
                 placeholder="1000"
               />
@@ -334,7 +335,10 @@ const AdminOffers = () => {
             </div>
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setIsAddModalOpen(false)}>
+            <Button type="button" variant="outline" onClick={() => {
+              setIsAddModalOpen(false);
+              resetForm();
+            }}>
               Cancel
             </Button>
             <Button type="button" onClick={handleAddOffer}>
@@ -370,13 +374,13 @@ const AdminOffers = () => {
                     <Input
                       id="edit-discount"
                       type="number"
-                      value={selectedOffer.discount}
+                      value={selectedOffer.discount || ''}
                       onChange={(e) => setSelectedOffer({...selectedOffer, discount: parseFloat(e.target.value)})}
                     />
                     <select
                       className="ml-2 border rounded-md px-2"
                       value={selectedOffer.discountType}
-                      onChange={(e) => setSelectedOffer({...selectedOffer, discountType: e.target.value})}
+                      onChange={(e) => setSelectedOffer({...selectedOffer, discountType: e.target.value as 'percentage' | 'fixed'})}
                     >
                       <option value="percentage">%</option>
                       <option value="fixed">₹</option>
@@ -417,7 +421,7 @@ const AdminOffers = () => {
                 <Input
                   id="edit-minPurchase"
                   type="number"
-                  value={selectedOffer.minPurchase}
+                  value={selectedOffer.minPurchase || ''}
                   onChange={(e) => setSelectedOffer({...selectedOffer, minPurchase: parseFloat(e.target.value)})}
                 />
               </div>
@@ -434,7 +438,10 @@ const AdminOffers = () => {
             </div>
           )}
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setIsEditModalOpen(false)}>
+            <Button type="button" variant="outline" onClick={() => {
+              setIsEditModalOpen(false);
+              resetForm();
+            }}>
               Cancel
             </Button>
             <Button type="button" onClick={handleUpdateOffer}>
@@ -454,7 +461,10 @@ const AdminOffers = () => {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setIsDeleteModalOpen(false)}>
+            <Button type="button" variant="outline" onClick={() => {
+              setIsDeleteModalOpen(false);
+              setSelectedOffer(null);
+            }}>
               Cancel
             </Button>
             <Button type="button" variant="destructive" onClick={confirmDelete}>
