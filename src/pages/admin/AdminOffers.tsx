@@ -149,7 +149,11 @@ const AdminOffers = () => {
   };
 
   const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    const options: Intl.DateTimeFormatOptions = { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    };
     return new Date(dateString).toLocaleDateString('en-IN', options);
   };
 
