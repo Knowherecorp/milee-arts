@@ -21,12 +21,13 @@ import { Loader2, Plus, Trash2, Edit, UserCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import ImageUpload from '@/components/admin/ImageUpload';
 import EmptyState from '@/components/admin/EmptyState';
+import { Testimonial } from '@/types/supabase';
 
 const testimonialSchema = z.object({
   name: z.string().min(2, 'Name is required'),
   location: z.string().min(2, 'Location is required'),
   text: z.string().min(10, 'Testimonial text should be at least 10 characters'),
-  image_url: z.string().optional().nullable()
+  image_url: z.string().nullable().optional()
 });
 
 type TestimonialFormValues = z.infer<typeof testimonialSchema>;
@@ -52,7 +53,7 @@ const AdminTestimonials = () => {
   });
 
   const createMutation = useMutation({
-    mutationFn: createTestimonial,
+    mutationFn: (data: Omit<Testimonial, 'id' | 'created_at'>) => createTestimonial(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['testimonials'] });
       toast.success('Testimonial added successfully');
@@ -65,7 +66,7 @@ const AdminTestimonials = () => {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<TestimonialFormValues> }) => 
+    mutationFn: ({ id, data }: { id: string; data: Partial<Omit<Testimonial, 'id' | 'created_at'>> }) => 
       updateTestimonial(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['testimonials'] });
@@ -90,7 +91,7 @@ const AdminTestimonials = () => {
     }
   });
 
-  const handleOpenDialog = (testimonial?: typeof testimonials[number]) => {
+  const handleOpenDialog = (testimonial?: Testimonial) => {
     if (testimonial) {
       setEditingId(testimonial.id);
       form.reset({
@@ -115,7 +116,7 @@ const AdminTestimonials = () => {
     if (editingId) {
       updateMutation.mutate({ id: editingId, data: values });
     } else {
-      createMutation.mutate(values);
+      createMutation.mutate(values as Omit<Testimonial, 'id' | 'created_at'>);
     }
   };
 

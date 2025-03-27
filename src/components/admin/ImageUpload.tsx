@@ -1,120 +1,100 @@
 
-import React, { useState } from 'react';
-import { ImageIcon, X, Upload } from 'lucide-react';
+import React, { useCallback, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { uploadProductImage } from '@/services/api';
-import { toast } from 'sonner';
+import { Upload, X } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
-interface ImageUploadProps {
-  currentImage?: string;
-  onImageUploaded: (url: string) => void;
-  className?: string;
+export interface ImageUploadProps {
+  value?: string | null;
+  onChange: (url: string | null) => void;
+  onUpload: (file: File) => Promise<string>;
+  label?: string;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({ 
-  currentImage, 
-  onImageUploaded,
-  className = ""
+  value, 
+  onChange, 
+  onUpload,
+  label = 'Image'
 }) => {
   const [isUploading, setIsUploading] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(currentImage || null);
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (!files || files.length === 0) return;
+  const handleUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    const file = files[0];
-    
-    // Basic validation
-    if (!file.type.startsWith('image/')) {
-      toast.error('Please select an image file');
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) { // 5MB limit
-      toast.error('Image file is too large. Please select a file under 5MB');
-      return;
-    }
-
-    // Create local preview
-    const objectUrl = URL.createObjectURL(file);
-    setPreviewUrl(objectUrl);
-
-    // Upload to Supabase
     try {
       setIsUploading(true);
-      const imageUrl = await uploadProductImage(file);
-      onImageUploaded(imageUrl);
-      toast.success('Image uploaded successfully');
+      const url = await onUpload(file);
+      onChange(url);
     } catch (error) {
-      console.error('Upload error:', error);
-      toast.error('Failed to upload image. Please try again.');
-      // Revert to previous image if upload fails
-      setPreviewUrl(currentImage || null);
+      console.error('Error uploading image:', error);
     } finally {
       setIsUploading(false);
     }
-  };
+  }, [onUpload, onChange]);
 
-  const handleRemoveImage = () => {
-    setPreviewUrl(null);
-    onImageUploaded('');
-  };
+  const handleRemove = useCallback(() => {
+    onChange(null);
+  }, [onChange]);
 
   return (
-    <div className={`space-y-4 ${className}`}>
-      {previewUrl ? (
-        <div className="relative image-preview">
-          <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
-          <Button 
-            variant="destructive" 
-            size="icon" 
-            className="absolute top-2 right-2 rounded-full"
-            onClick={handleRemoveImage}
-          >
-            <X size={16} />
-          </Button>
-        </div>
-      ) : (
-        <div className="image-upload-area">
-          <div className="file-input-button">
-            <input 
-              type="file" 
-              accept="image/*" 
-              onChange={handleFileChange}
-              disabled={isUploading}
-            />
-            <label className="image-upload-area-label">
-              <ImageIcon className="h-8 w-8 mb-2 text-muted-foreground" />
-              <span className="text-sm text-center text-muted-foreground">
-                {isUploading ? 'Uploading...' : 'Click to upload an image'}
-              </span>
-            </label>
-          </div>
-        </div>
-      )}
-      
-      {previewUrl && (
-        <div className="flex justify-center">
-          <div className="file-input-button">
-            <input 
-              type="file" 
-              accept="image/*" 
-              onChange={handleFileChange}
-              disabled={isUploading}
+    <div className="space-y-2">
+      <div className="flex flex-col space-y-2">
+        <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          {label}
+        </label>
+
+        {value ? (
+          <div className="relative aspect-square w-40 overflow-hidden rounded-md border">
+            <img 
+              src={value} 
+              alt="Uploaded image" 
+              className="object-cover w-full h-full"
             />
             <Button 
-              variant="outline" 
-              size="sm" 
-              className="text-xs" 
-              disabled={isUploading}
+              onClick={handleRemove}
+              className="absolute top-1 right-1 h-6 w-6 p-0" 
+              variant="destructive"
+              size="icon"
             >
-              <Upload className="h-3 w-3 mr-1" />
-              Change Image
+              <X className="h-4 w-4" />
             </Button>
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="border border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center text-sm text-muted-foreground">
+            <div className="flex flex-col items-center mb-2">
+              <Upload className="h-8 w-8 mb-1 text-muted-foreground" />
+              <p>Drag and drop or click to upload</p>
+            </div>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleUpload}
+              className="hidden"
+              id="image-upload"
+              disabled={isUploading}
+            />
+            <label htmlFor="image-upload" className="w-full">
+              <Button
+                variant="secondary"
+                className="w-full"
+                disabled={isUploading}
+                type="button"
+              >
+                {isUploading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Uploading...
+                  </>
+                ) : (
+                  'Choose Image'
+                )}
+              </Button>
+            </label>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

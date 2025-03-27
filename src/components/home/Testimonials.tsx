@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { QuoteIcon } from 'lucide-react';
+import { QuoteIcon, UserCircle } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { getTestimonials } from '@/services/api';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -42,19 +42,21 @@ const Testimonials = () => {
           </div>
         ) : testimonials.length > 0 ? (
           <div className="grid md:grid-cols-3 gap-6">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="bg-white hover:shadow-md transition-shadow hover-scale">
+            {testimonials.map((testimonial) => (
+              <Card key={testimonial.id} className="bg-white hover:shadow-md transition-shadow hover-scale">
                 <CardContent className="p-6">
                   <QuoteIcon className="h-8 w-8 text-primary/20 mb-4" />
                   <p className="mb-4 italic text-muted-foreground">
                     {testimonial.text}
                   </p>
                   <div className="flex items-center">
-                    <div className="h-10 w-10 rounded-full overflow-hidden bg-muted mr-3">
-                      {testimonial.image_url && (
+                    {testimonial.image_url ? (
+                      <div className="h-10 w-10 rounded-full overflow-hidden bg-muted mr-3">
                         <img src={testimonial.image_url} alt={testimonial.name} className="w-full h-full object-cover" />
-                      )}
-                    </div>
+                      </div>
+                    ) : (
+                      <UserCircle className="h-10 w-10 text-muted-foreground mr-3" />
+                    )}
                     <div>
                       <p className="font-medium">{testimonial.name}</p>
                       <p className="text-sm text-muted-foreground">{testimonial.location}</p>
