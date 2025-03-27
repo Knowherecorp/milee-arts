@@ -1,83 +1,19 @@
 
--- Create product images bucket if it doesn't exist
-INSERT INTO storage.buckets (id, name, public)
-SELECT 'product-images', 'Product Images', true
-WHERE NOT EXISTS (SELECT 1 FROM storage.buckets WHERE id = 'product-images');
+-- Create storage buckets
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES
+  ('product-images', 'product-images', true, 52428800, array['image/jpeg', 'image/png', 'image/gif', 'image/webp']::text[]),
+  ('banner-images', 'banner-images', true, 52428800, array['image/jpeg', 'image/png', 'image/gif', 'image/webp']::text[]),
+  ('testimonial-images', 'testimonial-images', true, 52428800, array['image/jpeg', 'image/png', 'image/gif', 'image/webp']::text[])
+ON CONFLICT (id) DO UPDATE SET
+  public = EXCLUDED.public,
+  file_size_limit = EXCLUDED.file_size_limit,
+  allowed_mime_types = EXCLUDED.allowed_mime_types;
 
--- Create banner images bucket if it doesn't exist
-INSERT INTO storage.buckets (id, name, public)
-SELECT 'banner-images', 'Banner Images', true
-WHERE NOT EXISTS (SELECT 1 FROM storage.buckets WHERE id = 'banner-images');
-
--- Create testimonial images bucket if it doesn't exist
-INSERT INTO storage.buckets (id, name, public)
-SELECT 'testimonial-images', 'Testimonial Images', true
-WHERE NOT EXISTS (SELECT 1 FROM storage.buckets WHERE id = 'testimonial-images');
-
--- Create storage policies for public access
-DO $$
-BEGIN
-  -- Product images policies
-  IF NOT EXISTS (
-    SELECT 1 FROM storage.policies 
-    WHERE name = 'Public Read Access for product-images'
-  ) THEN
-    CREATE POLICY "Public Read Access for product-images"
-    ON storage.objects
-    FOR SELECT
-    USING (bucket_id = 'product-images');
-  END IF;
-
-  IF NOT EXISTS (
-    SELECT 1 FROM storage.policies 
-    WHERE name = 'Public Upload Access for product-images'
-  ) THEN
-    CREATE POLICY "Public Upload Access for product-images"
-    ON storage.objects
-    FOR INSERT
-    WITH CHECK (bucket_id = 'product-images');
-  END IF;
-
-  -- Banner images policies
-  IF NOT EXISTS (
-    SELECT 1 FROM storage.policies 
-    WHERE name = 'Public Read Access for banner-images'
-  ) THEN
-    CREATE POLICY "Public Read Access for banner-images"
-    ON storage.objects
-    FOR SELECT
-    USING (bucket_id = 'banner-images');
-  END IF;
-
-  IF NOT EXISTS (
-    SELECT 1 FROM storage.policies 
-    WHERE name = 'Public Upload Access for banner-images'
-  ) THEN
-    CREATE POLICY "Public Upload Access for banner-images"
-    ON storage.objects
-    FOR INSERT
-    WITH CHECK (bucket_id = 'banner-images');
-  END IF;
-
-  -- Testimonial images policies
-  IF NOT EXISTS (
-    SELECT 1 FROM storage.policies 
-    WHERE name = 'Public Read Access for testimonial-images'
-  ) THEN
-    CREATE POLICY "Public Read Access for testimonial-images"
-    ON storage.objects
-    FOR SELECT
-    USING (bucket_id = 'testimonial-images');
-  END IF;
-
-  IF NOT EXISTS (
-    SELECT 1 FROM storage.policies 
-    WHERE name = 'Public Upload Access for testimonial-images'
-  ) THEN
-    CREATE POLICY "Public Upload Access for testimonial-images"
-    ON storage.objects
-    FOR INSERT
-    WITH CHECK (bucket_id = 'testimonial-images');
-  END IF;
-END
-$$;
+-- Create storage policies for public read access
+INSERT INTO storage.policies (name, definition, bucket_id)
+VALUES
+  ('Public Read Access', '(bucket_id = ''product-images''::text)', 'product-images'),
+  ('Public Read Access', '(bucket_id = ''banner-images''::text)', 'banner-images'),
+  ('Public Read Access', '(bucket_id = ''testimonial-images''::text)', 'testimonial-images')
+ON CONFLICT DO NOTHING;

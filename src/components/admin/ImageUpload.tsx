@@ -5,16 +5,16 @@ import { Upload, X } from 'lucide-react';
 import { Loader2 } from 'lucide-react';
 
 export interface ImageUploadProps {
-  value?: string | null;
   onChange: (url: string | null) => void;
   onUpload: (file: File) => Promise<string>;
+  value?: string | null;
   label?: string;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({ 
-  value, 
   onChange, 
   onUpload,
+  value,
   label = 'Image'
 }) => {
   const [isUploading, setIsUploading] = useState(false);

@@ -1,4 +1,3 @@
-
 // Custom type definitions for Supabase data
 // These complement the auto-generated types from Supabase
 
@@ -108,6 +107,7 @@ export interface Admin {
   created_at: string;
 }
 
+// Testimonial type for customer reviews
 export interface Testimonial {
   id: string;
   name: string;

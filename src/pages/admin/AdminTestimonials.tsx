@@ -27,7 +27,7 @@ const testimonialSchema = z.object({
   name: z.string().min(2, 'Name is required'),
   location: z.string().min(2, 'Location is required'),
   text: z.string().min(10, 'Testimonial text should be at least 10 characters'),
-  image_url: z.string().nullable().optional()
+  image_url: z.string().nullable()
 });
 
 type TestimonialFormValues = z.infer<typeof testimonialSchema>;
@@ -116,7 +116,13 @@ const AdminTestimonials = () => {
     if (editingId) {
       updateMutation.mutate({ id: editingId, data: values });
     } else {
-      createMutation.mutate(values as Omit<Testimonial, 'id' | 'created_at'>);
+      // Ensure required fields are provided for new testimonials
+      createMutation.mutate({
+        name: values.name,
+        location: values.location,
+        text: values.text,
+        image_url: values.image_url
+      });
     }
   };
 
@@ -129,7 +135,6 @@ const AdminTestimonials = () => {
   const handleImageUpload = async (file: File) => {
     try {
       const imageUrl = await uploadTestimonialImage(file);
-      form.setValue('image_url', imageUrl);
       return imageUrl;
     } catch (error) {
       toast.error('Failed to upload image');
@@ -156,9 +161,9 @@ const AdminTestimonials = () => {
               <form onSubmit={form.handleSubmit(onSubmit)} className="admin-form">
                 <div className="mb-6">
                   <ImageUpload
-                    value={form.watch('image_url')}
                     onChange={(url) => form.setValue('image_url', url)}
                     onUpload={handleImageUpload}
+                    value={form.watch('image_url')}
                     label="Customer Photo (Optional)"
                   />
                 </div>
