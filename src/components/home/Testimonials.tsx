@@ -2,10 +2,15 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { QuoteIcon } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { getTestimonials } from '@/services/api';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Testimonials = () => {
-  // Will be populated with real testimonials later
-  const testimonials: any[] = [];
+  const { data: testimonials = [], isLoading } = useQuery({
+    queryKey: ['testimonials'],
+    queryFn: getTestimonials
+  });
 
   return (
     <section className="py-16 md:py-24">
@@ -17,7 +22,25 @@ const Testimonials = () => {
           </p>
         </div>
         
-        {testimonials.length > 0 ? (
+        {isLoading ? (
+          <div className="grid md:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) => (
+              <Card key={i} className="bg-white">
+                <CardContent className="p-6">
+                  <QuoteIcon className="h-8 w-8 text-primary/20 mb-4" />
+                  <Skeleton className="w-full h-20 mb-4" />
+                  <div className="flex items-center">
+                    <Skeleton className="h-10 w-10 rounded-full mr-3" />
+                    <div>
+                      <Skeleton className="h-4 w-24 mb-2" />
+                      <Skeleton className="h-3 w-16" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : testimonials.length > 0 ? (
           <div className="grid md:grid-cols-3 gap-6">
             {testimonials.map((testimonial, index) => (
               <Card key={index} className="bg-white hover:shadow-md transition-shadow hover-scale">
@@ -28,8 +51,8 @@ const Testimonials = () => {
                   </p>
                   <div className="flex items-center">
                     <div className="h-10 w-10 rounded-full overflow-hidden bg-muted mr-3">
-                      {testimonial.avatar && (
-                        <img src={testimonial.avatar} alt={testimonial.name} className="w-full h-full object-cover" />
+                      {testimonial.image_url && (
+                        <img src={testimonial.image_url} alt={testimonial.name} className="w-full h-full object-cover" />
                       )}
                     </div>
                     <div>
@@ -44,7 +67,7 @@ const Testimonials = () => {
         ) : (
           <div className="text-center py-8 border rounded-lg">
             <p className="text-muted-foreground">
-              Add testimonials to showcase customer feedback.
+              No testimonials available yet. They will appear here once customers provide feedback.
             </p>
           </div>
         )}

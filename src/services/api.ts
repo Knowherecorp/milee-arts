@@ -9,7 +9,8 @@ import {
   OrderItem,
   Banner,
   Offer,
-  Admin
+  Admin,
+  Testimonial
 } from "@/types/supabase";
 
 // Products API
@@ -312,10 +313,52 @@ export const deleteOffer = async (id: string): Promise<void> => {
   if (error) throw error;
 };
 
+// Testimonials API
+export const getTestimonials = async (): Promise<Testimonial[]> => {
+  const { data, error } = await supabase
+    .from('testimonials')
+    .select('*')
+    .order('created_at', { ascending: false });
+  
+  if (error) throw error;
+  return data || [];
+};
+
+export const createTestimonial = async (testimonial: Omit<Testimonial, 'id' | 'created_at'>): Promise<Testimonial> => {
+  const { data, error } = await supabase
+    .from('testimonials')
+    .insert(testimonial)
+    .select()
+    .single();
+  
+  if (error) throw error;
+  return data;
+};
+
+export const updateTestimonial = async (id: string, testimonial: Partial<Omit<Testimonial, 'id' | 'created_at'>>): Promise<Testimonial> => {
+  const { data, error } = await supabase
+    .from('testimonials')
+    .update(testimonial)
+    .eq('id', id)
+    .select()
+    .single();
+  
+  if (error) throw error;
+  return data;
+};
+
+export const deleteTestimonial = async (id: string): Promise<void> => {
+  const { error } = await supabase
+    .from('testimonials')
+    .delete()
+    .eq('id', id);
+  
+  if (error) throw error;
+};
+
 // Admin Authentication API
 export const adminLogin = async (username: string, password: string): Promise<Admin | null> => {
   // In a real app, you would use Supabase Auth or a secure authentication method
-  // This is a simplified example for demonstration purposes
   const { data, error } = await supabase
     .from('admins')
     .select('*')
@@ -325,7 +368,6 @@ export const adminLogin = async (username: string, password: string): Promise<Ad
   if (error) return null;
   
   // Note: This is not secure! In a real app, you would use proper password hashing
-  // and verification on the server side
   if (data && data.password_hash === password) {
     const { password_hash, ...adminWithoutPassword } = data;
     return adminWithoutPassword as Admin;
@@ -348,6 +390,42 @@ export const uploadProductImage = async (file: File): Promise<string> => {
   
   const { data } = supabase.storage
     .from('product-images')
+    .getPublicUrl(filePath);
+  
+  return data.publicUrl;
+};
+
+export const uploadBannerImage = async (file: File): Promise<string> => {
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${Math.random().toString(36).substring(2, 15)}-${Date.now()}.${fileExt}`;
+  const filePath = `banners/${fileName}`;
+  
+  const { error: uploadError } = await supabase.storage
+    .from('banner-images')
+    .upload(filePath, file);
+  
+  if (uploadError) throw uploadError;
+  
+  const { data } = supabase.storage
+    .from('banner-images')
+    .getPublicUrl(filePath);
+  
+  return data.publicUrl;
+};
+
+export const uploadTestimonialImage = async (file: File): Promise<string> => {
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${Math.random().toString(36).substring(2, 15)}-${Date.now()}.${fileExt}`;
+  const filePath = `testimonials/${fileName}`;
+  
+  const { error: uploadError } = await supabase.storage
+    .from('testimonial-images')
+    .upload(filePath, file);
+  
+  if (uploadError) throw uploadError;
+  
+  const { data } = supabase.storage
+    .from('testimonial-images')
     .getPublicUrl(filePath);
   
   return data.publicUrl;

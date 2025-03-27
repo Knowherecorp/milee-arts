@@ -114,3 +114,90 @@
 .file-input-button input[type="file"] {
   @apply absolute inset-0 w-full h-full opacity-0 cursor-pointer;
 }
+
+/* Responsive Grid Layouts */
+.grid-layout-adaptive {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4;
+}
+
+.grid-layout-dashboard {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4;
+}
+
+/* Card hover effects */
+.hover-scale {
+  @apply transition-transform duration-300 hover:scale-105;
+}
+
+/* Loading states */
+.loading-shimmer {
+  @apply animate-pulse bg-muted/50 rounded;
+}
+
+/* Custom form controls */
+.custom-switch {
+  @apply relative inline-flex h-6 w-11 items-center rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-primary-foreground;
+}
+
+/* Responsive typography */
+.responsive-heading {
+  @apply text-xl sm:text-2xl md:text-3xl font-bold;
+}
+
+.responsive-subheading {
+  @apply text-lg sm:text-xl font-medium;
+}
+
+/* Status indicators */
+.status-badge {
+  @apply px-2 py-1 text-xs font-medium rounded;
+}
+
+.status-badge-success {
+  @apply bg-green-100 text-green-800 dark:bg-green-800/20 dark:text-green-400;
+}
+
+.status-badge-warning {
+  @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-800/20 dark:text-yellow-400;
+}
+
+.status-badge-error {
+  @apply bg-red-100 text-red-800 dark:bg-red-800/20 dark:text-red-400;
+}
+
+.status-badge-info {
+  @apply bg-blue-100 text-blue-800 dark:bg-blue-800/20 dark:text-blue-400;
+}
+
+/* Button variations */
+.icon-button {
+  @apply inline-flex items-center justify-center w-8 h-8 rounded-full focus:outline-none focus:ring-2 focus:ring-primary-foreground;
+}
+
+/* Responsive tables */
+.responsive-table-container {
+  @apply w-full overflow-x-auto rounded-lg border border-border;
+}
+
+.responsive-table {
+  @apply min-w-full divide-y divide-border;
+}
+
+/* Action panels */
+.action-panel {
+  @apply flex flex-wrap gap-2 justify-end mt-4;
+}
+
+/* Form validation states */
+.form-input-error {
+  @apply border-destructive focus:ring-destructive;
+}
+
+.form-input-success {
+  @apply border-green-500 focus:ring-green-500;
+}
+
+/* Custom scrollbars */
+.custom-scrollbar {
+  @apply scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent hover:scrollbar-thumb-muted-foreground/30;
+}

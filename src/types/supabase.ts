@@ -107,3 +107,12 @@ export interface Admin {
   username: string;
   created_at: string;
 }
+
+export interface Testimonial {
+  id: string;
+  name: string;
+  location: string;
+  text: string;
+  image_url: string | null;
+  created_at: string;
+}

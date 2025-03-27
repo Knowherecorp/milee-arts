@@ -19,10 +19,10 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   onAction
 }) => {
   return (
-    <div className="empty-state">
-      <Icon className="empty-state-icon" />
-      <h3 className="empty-state-text">{title}</h3>
-      <p className="empty-state-description">{description}</p>
+    <div className="flex flex-col items-center justify-center text-center p-8">
+      <Icon className="h-12 w-12 text-muted-foreground mb-4" />
+      <h3 className="text-lg font-medium mb-2">{title}</h3>
+      <p className="text-muted-foreground mb-6 max-w-md mx-auto">{description}</p>
       {actionLabel && onAction && (
         <Button onClick={onAction}>
           {actionLabel}

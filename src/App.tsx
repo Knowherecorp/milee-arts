@@ -35,8 +35,17 @@ import AdminOrders from "./pages/admin/AdminOrders";
 import AdminCustomers from "./pages/admin/AdminCustomers";
 import AdminBanners from "./pages/admin/AdminBanners";
 import AdminOffers from "./pages/admin/AdminOffers";
+import AdminTestimonials from "./pages/admin/AdminTestimonials";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+      staleTime: 30000 // 30 seconds
+    }
+  }
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -74,6 +83,7 @@ const App = () => (
                 <Route path="customers" element={<AdminCustomers />} />
                 <Route path="banners" element={<AdminBanners />} />
                 <Route path="offers" element={<AdminOffers />} />
+                <Route path="testimonials" element={<AdminTestimonials />} />
               </Route>
               
               {/* 404 Route */}
