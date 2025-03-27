@@ -37,15 +37,6 @@ const Footer = () => {
               >
                 <Instagram size={18} />
               </a>
-              <a 
-                href="https://youtube.com/@realismbykhushi?si=pe-qOicafZqKlcUg" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-foreground/70 hover:text-foreground transition-colors"
-                aria-label="Youtube"
-              >
-                <Youtube size={18} />
-              </a>
             </div>
           </div>
           
