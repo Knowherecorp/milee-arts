@@ -107,7 +107,7 @@ const Contact = () => {
                   <div>
                     <p className="font-medium">Phone</p>
                     <a href="tel:+1234567890" className="text-muted-foreground hover:text-primary transition-colors">
-                      +1 (234) 567-890
+                     +91-989 357 6630
                     </a>
                   </div>
                 </div>
@@ -117,9 +117,7 @@ const Contact = () => {
                   <div>
                     <p className="font-medium">Studio Address</p>
                     <address className="text-muted-foreground not-italic">
-                      123 Artisan Street<br />
-                      Brooklyn, NY 11201<br />
-                      United States
+                      Bhilai, C.G
                     </address>
                   </div>
                 </div>

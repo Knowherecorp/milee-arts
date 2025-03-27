@@ -25,11 +25,11 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-serif font-medium mb-4">Realism By Khushi</h4>
             <p className="text-muted-foreground mb-4">
-              We curate and craft unique Indian artworks that tell stories and create lasting impressions.
+              I curate and craft unique Indian artworks that tell stories and create lasting impressions.
             </p>
             <div className="flex space-x-4">
               <a 
-                href="https://instagram.com" 
+                href="https://www.instagram.com/realismbykhushi?igsh=cDcyNXl6dzh5am85" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-foreground/70 hover:text-foreground transition-colors"
@@ -38,22 +38,13 @@ const Footer = () => {
                 <Instagram size={18} />
               </a>
               <a 
-                href="https://facebook.com" 
+                href="https://youtube.com/@realismbykhushi?si=pe-qOicafZqKlcUg" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-foreground/70 hover:text-foreground transition-colors"
-                aria-label="Facebook"
+                aria-label="Youtube"
               >
-                <Facebook size={18} />
-              </a>
-              <a 
-                href="https://twitter.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-foreground/70 hover:text-foreground transition-colors"
-                aria-label="Twitter"
-              >
-                <Twitter size={18} />
+                <Youtube size={18} />
               </a>
             </div>
           </div>

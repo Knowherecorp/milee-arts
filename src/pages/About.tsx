@@ -22,18 +22,18 @@ const About = () => {
           <div>
             <h2 className="text-3xl font-serif font-medium mb-6">The Artist</h2>
             <p className="text-muted-foreground mb-4">
-              Khushi Sharma is a contemporary artist whose work spans multiple mediums, from traditional oil paintings to modern resin art and sculptural pieces. With a background in fine arts and a passion for experimentation, Khushi creates pieces that bridge classical techniques with contemporary aesthetics.
+            My name is Khushi Gupta and I am a passionate, self-taught artist with over four years of experience in realistic portraiture, mixed media, and customized artwork.
             </p>
             <p className="text-muted-foreground mb-4">
-              Having studied at the renowned School of Visual Arts, Khushi's work has been featured in galleries across the country. Her unique perspective and attention to detail have earned her recognition in the art community and a growing collector base.
+            I have successfully completed over 200+ commissioned projects and enjoy experimenting with different art forms.
             </p>
             <p className="text-muted-foreground">
-              "Art should not only be visually captivating but should also tell a story and evoke emotion. Each piece I create is infused with narrative and meaning." - Khushi Sharma
+            My journey has also extended to wall art and minimalist sculptures, where I explore floral and nature-inspired designs. My love for art has only been growing stronger since 2020.
             </p>
           </div>
           <div className="relative">
             <img 
-              src="https://images.unsplash.com/photo-1568819317551-31051b37f69f?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXJ0aXN0JTIwcG9ydHJhaXR8ZW58MHx8MHx8fDA%3D" 
+              src="../k1.jpg" 
               alt="Khushi Sharma" 
               className="rounded-lg w-full object-cover aspect-[3/4]"
             />
@@ -44,39 +44,23 @@ const About = () => {
         <Separator className="my-16" />
         
         <div className="max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl font-serif font-medium mb-6 text-center">Our Story</h2>
+          <h2 className="text-3xl font-serif font-medium mb-6 text-center">My Story</h2>
           <p className="text-muted-foreground mb-4">
-            Realism By Khushi began as a small studio practice in 2018, where Khushi created pieces primarily for local art fairs and exhibitions. As demand for her work grew, so did the vision for creating a platform where art enthusiasts could discover and acquire unique, handcrafted pieces that would transform their spaces.
+          I come from a small town, Chirimiri, my hometown, where I completed my schooling. Since childhood, I have been deeply passionate about art. No matter where I was—in school, in books, or around me—my eyes always searched for creativity and drawings. But my real journey as an artist began in 2020, right after I passed my 12th grade.
+
           </p>
           <p className="text-muted-foreground mb-4">
-            What started as a passion project has evolved into a curated online gallery featuring original artwork across various mediums. Each piece in our collection is created with intention, skill, and a commitment to artistic excellence.
+          With immense dedication and countless hours of practice, I worked tirelessly to refine my skills. At the age of 17, I received my very first art order, worth just ₹300. I didn’t have expensive tools or materials—just a simple ₹10 or ₹20 pencil was enough for me to start sketching. From that moment, I never looked back.
+
+          </p>
+          <p className="text-muted-foreground mb-4">
+          I kept practicing, learning, and improving, all on my own. I never had formal training or a mentor—I explored every art form by myself, experimenting and evolving with each stroke. Alongside my artistic journey, I balanced my education, managing both my studies and my passion with equal dedication.
+
           </p>
           <p className="text-muted-foreground">
-            Today, Realism By Khushi continues to grow, connecting art lovers with original pieces that resonate with them on a personal level. We believe that art has the power to transform spaces and lives, and we're dedicated to making that connection possible.
+          One thing I truly believe is that you don't need a fortune to start something—you just need the will to begin. Even ₹100 is enough if you have the determination. Never let the thought of financial limitations hold you back. Just start, and the path will unfold before you!
+
           </p>
-        </div>
-        
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div className="bg-secondary/30 p-8 rounded-lg">
-            <h3 className="text-xl font-serif font-medium mb-4">Our Mission</h3>
-            <p className="text-muted-foreground">
-              To create and curate meaningful artwork that connects with people on an emotional level, enhancing their living spaces and daily lives through beauty and storytelling.
-            </p>
-          </div>
-          
-          <div className="bg-secondary/30 p-8 rounded-lg">
-            <h3 className="text-xl font-serif font-medium mb-4">Our Vision</h3>
-            <p className="text-muted-foreground">
-              To become a trusted destination for discovering unique, handcrafted art that resonates with individual tastes and transforms spaces.
-            </p>
-          </div>
-          
-          <div className="bg-secondary/30 p-8 rounded-lg">
-            <h3 className="text-xl font-serif font-medium mb-4">Our Values</h3>
-            <p className="text-muted-foreground">
-              Artistic integrity, craftsmanship, creativity, authenticity, and a commitment to creating meaningful connections through art.
-            </p>
-          </div>
         </div>
       </div>
       

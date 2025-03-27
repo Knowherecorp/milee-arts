@@ -24,7 +24,7 @@ const slides: Slide[] = [
   },
   {
     id: 2,
-    image: "https://images.unsplash.com/photo-1577720643272-265d27a0d335?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGFydCUyMHBhaW50aW5nfGVufDB8fDB8fHww",
+    image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     title: "Original Paintings",
     subtitle: "Unique creations that tell a story.",
     buttonText: "View Paintings",
@@ -32,7 +32,7 @@ const slides: Slide[] = [
   },
   {
     id: 3,
-    image: "https://images.unsplash.com/photo-1544277581-540707ce14fa?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c2N1bHB0dXJlfGVufDB8fDB8fHww",
+    image: "https://images.unsplash.com/flagged/photo-1572392640988-ba48d1a74457?q=80&w=1528&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     title: "Sculptural Masterpieces",
     subtitle: "Tactile art that transforms spaces.",
     buttonText: "Explore Sculptures",
