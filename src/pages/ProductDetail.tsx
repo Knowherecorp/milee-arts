@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -66,7 +65,6 @@ const ProductDetail = () => {
     setActiveImage((activeImage - 1 + product.images.length) % product.images.length);
   };
   
-  // Format category name for display
   const categoryName = product.category.charAt(0).toUpperCase() + product.category.slice(1).replace('-', ' ');
   
   return (
@@ -92,7 +90,6 @@ const ProductDetail = () => {
         </nav>
         
         <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-          {/* Product images */}
           <div>
             <div className="relative rounded-lg overflow-hidden aspect-square mb-4">
               <img 
@@ -133,7 +130,6 @@ const ProductDetail = () => {
               )}
             </div>
             
-            {/* Thumbnail navigation */}
             {product.images.length > 1 && (
               <div className="flex gap-2 overflow-x-auto">
                 {product.images.map((image, index) => (
@@ -158,12 +154,11 @@ const ProductDetail = () => {
             )}
           </div>
           
-          {/* Product info */}
           <div>
             <h1 className="text-3xl font-serif font-medium mb-2">{product.name}</h1>
             
             <div className="flex items-center mb-4">
-              <p className="text-xl font-medium">${product.price.toFixed(2)}</p>
+              <p className="text-xl font-medium">₹{product.price.toLocaleString()}</p>
               {!product.inStock && (
                 <span className="ml-3 text-sm bg-destructive/10 text-destructive px-2 py-1 rounded">
                   Out of Stock
@@ -176,7 +171,6 @@ const ProductDetail = () => {
                 {product.description}
               </p>
               
-              {/* Product details */}
               <div className="space-y-4 mb-8">
                 <div className="flex">
                   <span className="w-32 text-muted-foreground">Artist:</span>
@@ -209,7 +203,6 @@ const ProductDetail = () => {
                 </div>
               </div>
               
-              {/* Add to cart */}
               {product.inStock && (
                 <div className="space-y-4">
                   <div className="flex items-center">
@@ -263,7 +256,6 @@ const ProductDetail = () => {
               )}
             </div>
             
-            {/* Shipping information */}
             <div className="border-t border-border pt-4">
               <h3 className="font-medium mb-2">Shipping & Returns</h3>
               <p className="text-sm text-muted-foreground mb-2">
@@ -276,7 +268,6 @@ const ProductDetail = () => {
           </div>
         </div>
         
-        {/* Related products */}
         {relatedProducts.length > 0 && (
           <div className="mt-16 md:mt-24">
             <h2 className="text-2xl font-serif font-medium mb-8">You May Also Like</h2>

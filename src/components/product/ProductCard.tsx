@@ -5,7 +5,7 @@ import { Product } from '@/data/products';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/hooks/use-cart';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, IndianRupee } from 'lucide-react';
+import { ShoppingCart } from 'lucide-react';
 
 interface ProductCardProps {
   product: Product;
@@ -60,9 +60,8 @@ const ProductCard = ({ product, className }: ProductCardProps) => {
         </div>
         
         <div className="flex items-center justify-between mt-4">
-          <span className="font-medium flex items-center">
-            <IndianRupee size={16} className="mr-1" />
-            {product.price.toFixed(2)}
+          <span className="font-medium">
+            ₹{product.price.toLocaleString()}
           </span>
           <Button 
             onClick={() => addItem(product)}
